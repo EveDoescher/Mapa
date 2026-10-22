@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OSM 3D City — Kenney City & Nature Kits</title>
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="scene-canvas"></canvas>
+
+      <aside class="hud-panel">
+        <div class="hud-header">
+          <span class="badge">STREAMING POR CHUNKS (260m × 260m)</span>
+          <h1>OSM 3D City: Kenney Kits</h1>
+          <p>Ruas, casas, prédios comerciais e praças arborizadas gerados a partir do OpenStreetMap!</p>
+        </div>
+
+        <form id="search-form" class="control-group">
+          <label for="search-input">Teletransportar para lugar (Nominatim + Overpass)</label>
+          <div class="input-row">
+            <input
+              id="search-input"
+              type="text"
+              placeholder="Ex: Centro, Limeira ou Av. Paulista"
+              value="Centro, Limeira - SP"
+            />
+            <button type="submit" id="search-btn">Ir</button>
+          </div>
+        </form>
+
+        <div class="control-group">
+          <label>Lugares rápidos para testar</label>
+          <div class="preset-chips">
+            <button type="button" class="chip" data-lat="-22.5646" data-lon="-47.4017" data-name="Centro, Limeira - SP">
+              Centro, Limeira
+            </button>
+            <button type="button" class="chip" data-lat="-19.9322" data-lon="-43.9380" data-name="Savassi / Liberdade, BH">
+              BH (Diagonal + Praça)
+            </button>
+            <button type="button" class="chip" data-lat="-23.5614" data-lon="-46.6559" data-name="Av. Paulista, SP">
+              Av. Paulista, SP
+            </button>
+            <button type="button" class="chip" data-lat="41.3917" data-lon="2.1649" data-name="Eixample, Barcelona">
+              Barcelona (Grid 90°)
+            </button>
+            <button type="button" class="chip" data-lat="-25.4320" data-lon="-49.2710" data-name="Centro, Curitiba">
+              Curitiba, PR
+            </button>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label for="mode-select">Modo de Encaixe das Ruas</label>
+          <select id="mode-select">
+            <option value="deformed" selected>1B. Malha Contínua Deformada (CSG Sem Falhas)</option>
+            <option value="instanced">1A. Blocos .GLB Rígidos (InstancedMesh)</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <div class="slider-header">
+            <label for="chunk-radius-select">Render Distance (Grade de Chunks)</label>
+          </div>
+          <select id="chunk-radius-select">
+            <option value="0">1×1 (Apenas 1 Chunk Central — 260m)</option>
+            <option value="1" selected>3×3 (9 Chunks Visíveis — 780m × 780m)</option>
+            <option value="2">5×5 (25 Chunks Visíveis — 1.3km × 1.3km)</option>
+          </select>
+        </div>
+
+        <div class="control-group toggles">
+          <label class="checkbox-label">
+            <input type="checkbox" id="toggle-buildings" checked />
+            <span>Casas e Prédios 3D (Suburban / Commercial)</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="toggle-autofill" checked />
+            <span>Auto-lotear quadras sem prédios no OSM</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="toggle-parks" checked />
+            <span>Praças e Parques Arborizados (Nature Kit)</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="toggle-props" checked />
+            <span>Props de Rua (Postes, Semáforos, Placas)</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="toggle-chunk-borders" checked />
+            <span>Mostrar Bordas das Chunks (Rosa/Azul)</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="toggle-osm-lines" />
+            <span>Mostrar vetor original do OSM (Debug)</span>
+          </label>
+        </div>
+
+        <div class="stats-box" id="stats-box">
+          <div class="stat-item">
+            <span class="stat-label">Chunk Atual</span>
+            <strong id="stat-chunk">0, 0</strong>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Chunks (Ativas/Cache)</span>
+            <strong id="stat-ways">0 / 0</strong>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Objetos / Draws</span>
+            <strong id="stat-draws">0</strong>
+          </div>
+        </div>
+
+        <div class="status-bar" id="status-bar">Iniciando cidade 3D...</div>
+      </aside>
+
+      <div class="controls-hint">
+        <span><strong>Botão Esquerdo:</strong> Rotacionar</span>
+        <span><strong>Botão Direito / Shift:</strong> Arrastar (Carrega novas Chunks!)</span>
+        <span><strong>Scroll:</strong> Zoom</span>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
